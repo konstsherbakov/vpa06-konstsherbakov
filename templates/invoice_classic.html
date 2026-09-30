@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Чек № {{ invoice_id }}</title>
+<style>
+  /* Шрифт с кириллицей. Путь относительный — от папки проекта (base_url в main.py) */
+  @font-face {
+    font-family: "DejaVu Sans";
+    src: url("fonts/DejaVuSans.ttf");
+    font-weight: normal;
+  }
+  @font-face {
+    font-family: "DejaVu Sans";
+    src: url("fonts/DejaVuSans-Bold.ttf");
+    font-weight: bold;
+  }
+
+  @page { size: A4; margin: 20mm; }
+
+  body {
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 11pt;
+    color: #000;
+  }
+  h1 {
+    text-align: center;
+    font-size: 18pt;
+    margin: 0 0 4mm;
+    letter-spacing: 1px;
+  }
+  .meta { text-align: center; margin-bottom: 8mm; }
+  .meta p { margin: 1mm 0; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #000; padding: 2mm 3mm; }
+  th { background: #eee; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  td.center { text-align: center; }
+
+  tfoot td { font-weight: bold; }
+  .signature { margin-top: 15mm; }
+</style>
+</head>
+<body>
+  <h1>ТОВАРНЫЙ ЧЕК № {{ invoice_id }}</h1>
+
+  <div class="meta">
+    <p>Дата: {{ date }}</p>
+    <p>Покупатель: {{ customer }}</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>№</th>
+        <th>Наименование</th>
+        <th class="num">Цена, ₽</th>
+        <th class="num">Кол-во</th>
+        <th class="num">Сумма, ₽</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td class="center">{{ loop.index }}</td>
+        <td>{{ item.product }}</td>
+        <td class="num">{{ item.price | money }}</td>
+        <td class="num">{{ item.qty }}</td>
+        <td class="num">{{ item.line_total | money }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4" class="num">ИТОГО:</td>
+        <td class="num">{{ total | money }}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <p class="signature">Продавец: ____________________</p>
+</body>
+</html>

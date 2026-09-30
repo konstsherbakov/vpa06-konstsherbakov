@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Чек № {{ invoice_id }}</title>
+<style>
+  /* Шрифт с кириллицей. Путь относительный — от папки проекта (base_url в main.py) */
+  @font-face {
+    font-family: "DejaVu Sans";
+    src: url("fonts/DejaVuSans.ttf");
+    font-weight: normal;
+  }
+  @font-face {
+    font-family: "DejaVu Sans";
+    src: url("fonts/DejaVuSans-Bold.ttf");
+    font-weight: bold;
+  }
+
+  @page { size: A4; margin: 0; }
+
+  body {
+    font-family: "DejaVu Sans", sans-serif;
+    font-size: 10.5pt;
+    color: #1f2937;
+    margin: 0;
+  }
+
+  /* Цветная шапка на всю ширину */
+  .header {
+    background: #4f46e5;
+    color: #fff;
+    padding: 14mm 18mm 10mm;
+  }
+  .header .label {
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.8;
+  }
+  .header h1 { margin: 2mm 0 0; font-size: 24pt; }
+
+  .content { padding: 10mm 18mm; }
+
+  .info { display: flex; justify-content: space-between; margin-bottom: 10mm; }
+  .info .caption { font-size: 8.5pt; color: #6b7280; text-transform: uppercase; }
+  .info .value { font-size: 12pt; font-weight: bold; margin-top: 1mm; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    font-size: 8.5pt;
+    color: #6b7280;
+    text-transform: uppercase;
+    border-bottom: 2px solid #4f46e5;
+    padding: 2mm 2mm;
+  }
+  td { padding: 3mm 2mm; border-bottom: 1px solid #e5e7eb; }
+  .num { text-align: right; white-space: nowrap; }
+
+  .total {
+    margin-top: 8mm;
+    margin-left: auto;
+    width: 70mm;
+    background: #eef2ff;
+    border-radius: 3mm;
+    padding: 5mm 6mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .total .caption { color: #4f46e5; font-weight: bold; }
+  .total .sum { font-size: 16pt; font-weight: bold; color: #312e81; }
+
+  .footer { margin-top: 15mm; font-size: 9pt; color: #9ca3af; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="label">Кассовый чек</div>
+    <h1>№ {{ invoice_id }}</h1>
+  </div>
+
+  <div class="content">
+    <div class="info">
+      <div>
+        <div class="caption">Клиент</div>
+        <div class="value">{{ customer }}</div>
+      </div>
+      <div style="text-align: right">
+        <div class="caption">Дата</div>
+        <div class="value">{{ date }}</div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Товар</th>
+          <th class="num">Цена</th>
+          <th class="num">Кол-во</th>
+          <th class="num">Сумма</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>{{ item.product }}</td>
+          <td class="num">{{ item.price | money }} ₽</td>
+          <td class="num">× {{ item.qty }}</td>
+          <td class="num">{{ item.line_total | money }} ₽</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="total">
+      <span class="caption">Итого</span>
+      <span class="sum">{{ total | money }} ₽</span>
+    </div>
+
+    <div class="footer">Спасибо за покупку!</div>
+  </div>
+</body>
+</html>
